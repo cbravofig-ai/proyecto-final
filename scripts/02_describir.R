@@ -215,4 +215,6 @@ dir.create("output/tablas", recursive = TRUE, showWarnings = FALSE)
 
 write.csv(tabla_1_df, "output/tablas/tabla1_descriptivos_casen.csv", row.names = FALSE)
 save_tt(tabla_1_paper, "output/tablas/tabla1_descriptivos_casen.tex", overwrite = TRUE)
-save_tt(tabla_1_paper, "output/tablas/tabla1_descriptivos_casen.png", overwrite = TRUE)
+if (requireNamespace("webshot2", quietly = TRUE)) {
+  save_tt(tabla_1_paper, "output/tablas/tabla1_descriptivos_casen.png", overwrite = TRUE)
+}
