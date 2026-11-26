@@ -1,0 +1,134 @@
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\Camila\Desktop\Fundamentos de Programación\proyecto-final\output/03_modelar.log
+  log type:  text
+ opened on:  26 Nov 2026, 19:12:51
+
+. 
+. * Verificar que estout esté instalado (para reproducibilidad en otra máquina)
+. capture which esttab
+
+. if _rc != 0 {
+.     ssc install estout
+. }
+
+. 
+. * -----------------------------------------------------------------------------
+. * 1. Macros de configuración
+. * -----------------------------------------------------------------------------
+. local datos     "data/processed/casen_nuble_limpio.dta"
+
+. local controles "esc edad tot_per_h"
+
+. local depvars   "ln_yauth asinh_yauth"
+
+. 
+. * -----------------------------------------------------------------------------
+. * 2. Cargar base procesada y etiquetar variables
+. * -----------------------------------------------------------------------------
+. use "`datos'", clear
+
+. 
+. label variable jefa_fem    "Jefatura femenina"
+
+. label variable esc         "Escolaridad (años)"
+
+. label variable edad        "Edad (años)"
+
+. label variable tot_per_h   "Tamaño del hogar"
+
+. label variable ln_yauth    "Log(Ingreso autónomo)"
+
+. label variable asinh_yauth "Asinh(Ingreso autónomo)"
+
+. 
+. * -----------------------------------------------------------------------------
+. * 3. Estimación de modelos ponderados con factor de expansión regional (expr)
+. * -----------------------------------------------------------------------------
+. * Nota: [pw=expr] pondera con el factor regional y aplica errores robustos.
+. 
+. * Modelo 1: Brecha bruta en log(yauth) sin controles
+. quietly regress ln_yauth jefa_fem [pw=expr]
+
+. estimates store m_bruto
+
+. estadd local controles "No"        : m_bruto
+
+. estadd local muestra   "yauth > 0" : m_bruto
+
+. 
+. * Modelos 2 y 3: Especificación principal (ln) y robustez con ceros (asinh)
+. foreach y of local depvars {
+  2.     quietly regress `y' jefa_fem `controles' [pw=expr]
+  3.     estimates store m_`y'
+  4.     estadd local controles "Sí" : m_`y'
+  5. }
+
+. estadd local muestra "yauth > 0" : m_ln_yauth
+
+. estadd local muestra "Completa"  : m_asinh_yauth
+
+. 
+. * -----------------------------------------------------------------------------
+. * 4. Salida visible en el log y exportación de tablas
+. * -----------------------------------------------------------------------------
+. esttab m_bruto m_ln_yauth m_asinh_yauth, se label b(%9.3f) varwidth(25) ///
+>     stats(N r2 controles muestra, ///
+>           labels("Observaciones" "R2" "Controles" "Muestra") ///
+>           fmt(%9.0f %5.3f))
+
+-------------------------------------------------------------------------
+                                   (1)             (2)             (3)   
+                          Log(Ingres~)    Log(Ingres~)    Asinh(Ingr~)   
+-------------------------------------------------------------------------
+Jefatura femenina               -0.211***       -0.275***       -0.556** 
+                               (0.049)         (0.043)         (0.172)   
+
+Escolaridad (años)                               0.105***        0.212***
+                                               (0.007)         (0.027)   
+
+Edad (años)                                      0.003           0.003   
+                                               (0.002)         (0.009)   
+
+Tamaño del hogar                                 0.134***        0.304***
+                                               (0.016)         (0.062)   
+
+Constant                        13.428***       11.670***       10.011***
+                               (0.038)         (0.151)         (0.657)   
+-------------------------------------------------------------------------
+Observaciones                     1671            1671            1782   
+R2                               0.014           0.219           0.069   
+Controles                           No              Sí              Sí   
+Muestra                      yauth > 0       yauth > 0        Completa   
+-------------------------------------------------------------------------
+Standard errors in parentheses
+* p<0.05, ** p<0.01, *** p<0.001
+
+. 
+. esttab m_bruto m_ln_yauth m_asinh_yauth using "output/tablas/modelos_hito2.tex", ///
+>     replace se label b(%9.3f) ///
+>     stats(N r2 controles muestra, ///
+>           labels("Observaciones" "R2" "Controles" "Muestra") ///
+>           fmt(%9.0f %5.3f))
+(file output/tablas/modelos_hito2.tex not found)
+(output written to output/tablas/modelos_hito2.tex)
+
+. 
+. esttab m_bruto m_ln_yauth m_asinh_yauth using "output/tablas/modelos_hito2.rtf", ///
+>     replace se label b(%9.3f) ///
+>     stats(N r2 controles muestra, ///
+>           labels("Observaciones" "R2" "Controles" "Muestra") ///
+>           fmt(%9.0f %5.3f))
+(file output/tablas/modelos_hito2.rtf not found)
+(output written to output/tablas/modelos_hito2.rtf)
+
+. 
+. * -----------------------------------------------------------------------------
+. * 5. Cierre del log
+. * -----------------------------------------------------------------------------
+. log close
+      name:  <unnamed>
+       log:  C:\Users\Camila\Desktop\Fundamentos de Programación\proyecto-final\output/03_modelar.log
+  log type:  text
+ closed on:  26 Nov 2026, 19:12:51
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------

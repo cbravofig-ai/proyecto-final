@@ -1,0 +1,31 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{3}{c}}
+\hline\hline
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}\\
+                    &\multicolumn{1}{c}{Log(Ingreso autónomo)}&\multicolumn{1}{c}{Log(Ingreso autónomo)}&\multicolumn{1}{c}{Asinh(Ingreso autónomo)}\\
+\hline
+Jefatura femenina   &      -0.211\sym{***}&      -0.275\sym{***}&      -0.556\sym{**} \\
+                    &     (0.049)         &     (0.043)         &     (0.172)         \\
+[1em]
+Escolaridad (años)  &                     &       0.105\sym{***}&       0.212\sym{***}\\
+                    &                     &     (0.007)         &     (0.027)         \\
+[1em]
+Edad (años)         &                     &       0.003         &       0.003         \\
+                    &                     &     (0.002)         &     (0.009)         \\
+[1em]
+Tamaño del hogar    &                     &       0.134\sym{***}&       0.304\sym{***}\\
+                    &                     &     (0.016)         &     (0.062)         \\
+[1em]
+Constant            &      13.428\sym{***}&      11.670\sym{***}&      10.011\sym{***}\\
+                    &     (0.038)         &     (0.151)         &     (0.657)         \\
+\hline
+Observaciones       &        1671         &        1671         &        1782         \\
+R2                  &       0.014         &       0.219         &       0.069         \\
+Controles           &          No         &          Sí         &          Sí         \\
+Muestra             &   yauth > 0         &   yauth > 0         &    Completa         \\
+\hline\hline
+\multicolumn{4}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{4}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+}
