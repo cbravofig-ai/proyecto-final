@@ -39,7 +39,9 @@ Los números iniciales salen de `scripts/00_exploracion.R` y la muestra final do
 
 ## Modelo estimado
 
-$$\ln(\text{yauth}) = \beta_0 + \beta_1(\text{jefa\_fem}) + \beta_2(\text{esc}) + \beta_3(\text{edad}) + \beta_4(\text{tot\_per\_h}) + u$$
+```math
+\ln(\text{yauth}) = \beta_0 + \beta_1(\text{jefa\_fem}) + \beta_2(\text{esc}) + \beta_3(\text{edad}) + \beta_4(\text{tot\_per\_h}) + u
+```
 
 Estimado por MCO con ponderador `expr` (`[pw=expr]`, con errores estándar robustos) 
 en `scripts/03_modelar.do`. Como $\ln(0)$ no existe, se estiman dos versiones: 
